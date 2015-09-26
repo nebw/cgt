@@ -39,6 +39,7 @@ include(${CMAKE_SOURCE_DIR}/4build/cmake/CUDA.cmake)
 
 find_package(PythonLibs 2.7 REQUIRED)
 find_package(Numpy REQUIRED)
+find_package(OpenBLAS REQUIRED)
 
 if (APPLE)
   set(CMAKE_MACOSX_RPATH 0)
@@ -103,14 +104,17 @@ target_link_libraries(cycgt cgt)
 # )
 # add_custom_target(gencfiles ALL DEPENDS cgtcorefuns.c)
 
-set(OPENBLAS_LIBRARY ${CMAKE_BINARY_DIR}/OpenBLAS/libopenblas.a)
+if(NOT OpenBLAS_FOUND)
+  set(OPENBLAS_LIBRARY ${CMAKE_BINARY_DIR}/OpenBLAS/libopenblas.a)
 
-add_custom_command(
-  COMMAND 4build/download_and_build_openblas.py ${CMAKE_BINARY_DIR}/OpenBLAS
-  OUTPUT ${OPENBLAS_LIBRARY}
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-add_custom_target(openblas ALL DEPENDS ${OPENBLAS_LIBRARY})
+  add_custom_command(
+    COMMAND 4build/download_and_build_openblas.py ${CMAKE_BINARY_DIR}/OpenBLAS
+    OUTPUT ${OPENBLAS_LIBRARY}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
+
+  add_custom_target(openblas ALL DEPENDS ${OPENBLAS_LIBRARY})
+endif()
 
 # add_library(cgtcorefuns SHARED cgtcorefuns.c)
 # add_dependencies(cgtcorefuns openblas) # WHY IS THIS NECESSARY?
