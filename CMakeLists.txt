@@ -39,7 +39,7 @@ include(${CMAKE_SOURCE_DIR}/4build/cmake/CUDA.cmake)
 
 find_package(PythonLibs 2.7 REQUIRED)
 find_package(Numpy REQUIRED)
-find_package(OpenBLAS REQUIRED)
+find_package(OpenBLAS)
 
 if (APPLE)
   set(CMAKE_MACOSX_RPATH 0)
